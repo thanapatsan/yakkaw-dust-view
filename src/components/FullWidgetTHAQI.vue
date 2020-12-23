@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col max-w-full border-2 border-gray-500 rounded-md">
+      {{datasrc}}
     <div class="px-4">
       <div class="my-4">
         <h1 class="text-3xl mb-1">
@@ -37,7 +38,6 @@
           <span class="font-bold">{{ data.pm100 }}</span> μg/m<sup>3</sup>
         </p>
       </div>
-
     </div>
 
     <div
@@ -89,12 +89,11 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
-  name: "HelloWorld",
+  name: "FullWidgetTHAQI",
   props: {
     stationid: String,
+    datasrc: Object,
   },
   data() {
     return { rawdata: {}, data: {} };
@@ -107,33 +106,13 @@ export default {
         return "📉";
       } else return "?";
     },
-    overrangeUSAQIIndicator: (value) => {
-      if (value > 500) {
-        return "⚠️";
-      } else return value;
-    },
+
     overrangeTHAQIIndicator: (value) => {
       if (value > 200) {
         return "⚠️";
       } else return value;
     },
-    USAQIEmoji: (value) => {
-      if (value > 0 && value <= 25) {
-        return "🔵";
-      } else if (value >= 26 && value <= 50) {
-        return "🟢";
-      } else if (value >= 51 && value <= 100) {
-        return "🟡";
-      } else if (value >= 101 && value <= 150) {
-        return "🟠";
-      } else if (value >= 151 && value <= 200) {
-        return "🔴";
-      } else if (value >= 201 && value <= 300) {
-        return "🟣";
-      } else if (value > 301) {
-        return "🟤";
-      } else return "⚫";
-    },
+
     THAQIEmoji: (value) => {
       if (value > 0 && value <= 25) {
         return "🔵";
@@ -207,124 +186,6 @@ export default {
   },
 
   methods: {
-    calculateUSAQI_pm25: function (value) {
-      let cHigh;
-      let cLow;
-      let iHigh;
-      let iLow;
-
-      if (value >= 0 && value <= 12.0) {
-        iLow = 0;
-        iHigh = 50;
-        cLow = 0.0;
-        cHigh = 12.0;
-      } else if (value >= 12.1 && value <= 35.4) {
-        iLow = 51;
-        iHigh = 100;
-        cLow = 12.1;
-        cHigh = 35.4;
-      } else if (value >= 35.5 && value <= 55.4) {
-        iLow = 101;
-        iHigh = 150;
-        cLow = 35.5;
-        cHigh = 55.4;
-      } else if (value >= 55.5 && value <= 150.4) {
-        iLow = 151;
-        iHigh = 200;
-        cLow = 55.5;
-        cHigh = 150.4;
-      } else if (value >= 150.5 && value <= 250.4) {
-        iLow = 201;
-        iHigh = 300;
-        cLow = 150.5;
-        cHigh = 250.4;
-      } else if (value >= 250.5 && value <= 350.4) {
-        iLow = 301;
-        iHigh = 400;
-        cLow = 250.5;
-        cHigh = 350.4;
-      } else if (value >= 350.5 && value <= 500.4) {
-        iLow = 401;
-        iHigh = 500;
-        cLow = 350.5;
-        cHigh = 500.4;
-      } else if (value >= 500.5) {
-        return 500 + (value - 500.5);
-      } else return "???";
-
-      let result = ((iHigh - iLow) / (cHigh - cLow)) * (value - cLow) + iLow;
-      return Math.floor(result);
-    },
-
-    calculateUSAQI_pm100: function (value) {
-      let cHigh;
-      let cLow;
-      let iHigh;
-      let iLow;
-
-      if (value > 0 && value <= 54) {
-        iLow = 0;
-        iHigh = 50;
-        cLow = 0;
-        cHigh = 54;
-      } else if (value >= 55 && value <= 154) {
-        iLow = 51;
-        iHigh = 100;
-        cLow = 55;
-        cHigh = 154;
-      } else if (value >= 155 && value <= 254) {
-        iLow = 101;
-        iHigh = 150;
-        cLow = 155;
-        cHigh = 254;
-      } else if (value >= 255 && value <= 354) {
-        iLow = 151;
-        iHigh = 200;
-        cLow = 255;
-        cHigh = 354;
-      } else if (value >= 355 && value <= 424) {
-        iLow = 201;
-        iHigh = 300;
-        cLow = 355;
-        cHigh = 424;
-      } else if (value >= 425 && value <= 504) {
-        iLow = 301;
-        iHigh = 400;
-        cLow = 425;
-        cHigh = 504;
-      } else if (value >= 505 && value <= 604) {
-        iLow = 401;
-        iHigh = 500;
-        cLow = 505;
-        cHigh = 604;
-      } else if (value > 605) {
-        return 500 + (value - 604);
-      } else return "???";
-
-      let result = ((iHigh - iLow) / (cHigh - cLow)) * (value - cLow) + iLow;
-      return Math.floor(result);
-    },
-
-    getUSAQIColorCode: function (value) {
-      if (value > 0 && value <= 25) {
-        return "blue-400";
-      } else if (value >= 26 && value <= 50) {
-        return "green-500";
-      } else if (value >= 51 && value <= 100) {
-        return "yellow-400";
-      } else if (value >= 101 && value <= 150) {
-        return "orange-500";
-      } else if (value >= 151 && value <= 200) {
-        return "red-600";
-      } else if (value >= 201 && value <= 300) {
-        return "purple-600";
-      } else if (value > 301) {
-        return "red-800";
-      } else return "gray-300";
-    },
-
-    //* TH AQI
-
     calculateTHAQI_pm25: function (value) {
       let cHigh;
       let cLow;
@@ -410,20 +271,7 @@ export default {
   },
 
   mounted() {
-
-    //* mock api by using json
-    axios
-      .get("/data/yakkaw.json")
-      .then((response) => {
-        this.rawdata = response.data;
-
-        this.data = this.rawdata.response.filter(
-          (station) => station.dvid == this.stationid
-        )[0];
-      })
-      .catch((e) => {
-        this.errors.push(e);
-      });
+    
   },
 };
 </script>

@@ -1,28 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container">
+    <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <!-- <PassData stationid="014" :datasrc="rawdata" /> -->
+      <!-- <FullWidgetTHAQI stationid="014" /> -->
+      <HelloWorld stationid="014" />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import axios from "axios";
+
+// import PassData from "./components/passdata.vue";
+// import FullWidgetTHAQI from "./components/FullWidgetTHAQI";
+import HelloWorld from "./components/HelloWorld";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    // PassData,
+    // FullWidgetTHAQI,
+    HelloWorld,
+  },
+  data() {
+    return { rawdata: {} };
+  },
+  created() {
+    //* actual API point
+    // axios
+    //   .get(`https://yakkaw.mfu.ac.th/api/yakkaw/devices`)
+    //   .then((response) => {
+    //     this.rawdata = response.data;
+    //   })
+    //   .catch((e) => {
+    //     this.errors.push(e);
+    //   });
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+
