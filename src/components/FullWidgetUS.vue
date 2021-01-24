@@ -1,27 +1,29 @@
 <template>
-  <div class="flex flex-col max-w-full border-2 border-gray-500 rounded-md">
-
+  <div
+    class="flex flex-col max-w-full max-h-full border-2 border-gray-400 rounded-md"
+  >
     <div class="px-4">
       <div class="my-4">
-        <h1 class="text-3xl mb-1">
-          {{ data.place }}
+        <h1 class="text-2xl mb-1">
+          {{ display.place }}
         </h1>
-        <h2 class="text-xl my-1">
-          {{ data.address }}
+        <h2 class="text-lg my-1">
+          {{ display.address }}
         </h2>
         <h3>
-          📅 {{ data.ddate }} {{ data.dtime | clockEmoji }} {{ data.dtime }}
+          📅 {{ display.ddate }} {{ display.dtime | clockEmoji }}
+          {{ display.dtime }}
         </h3>
       </div>
     </div>
 
     <div
-      class="grid grid-rows-2 grid-cols-2 grid-flow-col items-center"
-      :class="[`bg-${getUSAQIColorCode(calculateUSAQI_pm25(data.pm25))}`]"
+      class="grid grid-rows-2 grid-cols-2 grid-flow-col items-center text-center"
+      :class="[`aqi-bg-${getUSAQIColorCode(calculateUSAQI_pm25(display.pm25))}`]"
     >
       <div class="row-span-2 col-span-1 text-center">
-        <p class="text-6xl font-bold">
-          {{ calculateUSAQI_pm25(data.pm25) }}
+        <p class="text-5xl lg:text-6xl font-bold">
+          {{ calculateUSAQI_pm25(display.pm25) }}
         </p>
         <p>US AQI</p>
       </div>
@@ -29,78 +31,132 @@
       <div class="row-span-1 col-span-1">
         <p>
           PM<sub>2.5</sub>:
-          <span class="font-bold">{{ data.pm25 }}</span> μg/m<sup>3</sup>
+          <span class="font-bold">{{ display.pm25 }}</span> μg/m<sup>3</sup>
         </p>
       </div>
       <div class="row-span-1 col-span-1">
         <p>
           PM<sub>10</sub>:
-          <span class="font-bold">{{ data.pm100 }}</span> μg/m<sup>3</sup>
+          <span class="font-bold">{{ display.pm100 }}</span> μg/m<sup>3</sup>
         </p>
       </div>
-
     </div>
 
     <div
-      class="grid grid-rows-4 grid-cols-6 grid-flow-col justify-items-center"
+      class="grid grid-rows-3 grid-cols-6 grid-flow-col justify-items-center text-center bg-gray-100"
     >
       <div class="row-span-1 col-span-6 text-lg">
-        <p>PM<sub>2.5</sub> Trend: {{ data.trend | trendIndicator }}</p>
+        <p>PM<sub>2.5</sub> Trend: {{ display.trend | trendIndicator }}</p>
       </div>
 
       <p>24h</p>
-      <p>{{ data.av24h }}</p>
-      <p>{{ data.av24h | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.av24h)
+          )}`,
+        ]"
+      >
+        {{ display.av24h }}
+      </p>
+
       <p>12h</p>
-      <p>{{ data.av12h }}</p>
-      <p>{{ data.av12h | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.av12h)
+          )}`,
+        ]"
+      >
+        {{ display.av12h }}
+      </p>
+
       <p>6h</p>
-      <p class="font-bold">{{ data.av6h }}</p>
-      <p>{{ data.av6h | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.av6h)
+          )}`,
+        ]"
+      >
+        {{ display.av6h }}
+      </p>
+
       <p>3h</p>
-      <p>{{ data.av3h }}</p>
-      <p>{{ data.av3h | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.av3h)
+          )}`,
+        ]"
+      >
+        {{ display.av3h }}
+      </p>
+
       <p>1h</p>
-      <p>{{ data.av1h }}</p>
-      <p>{{ data.av1h | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.av1h)
+          )}`,
+        ]"
+      >
+        {{ display.av1h }}
+      </p>
+
       <p>5m</p>
-      <p class="font-bold">{{ data.pm25 }}</p>
-      <p>{{ data.pm25 | USAQIEmoji }}</p>
+      <p
+        class="w-full"
+        :class="[
+          `border-b-4 aqi-border-${getUSAQIColorCode(
+            calculateUSAQI_pm25(display.pm25)
+          )}`,
+        ]"
+      >
+        {{ display.pm25 }}
+      </p>
     </div>
 
     <div class="grid grid-cols-2 justify-items-center">
       <div class="row-span-1 col-span-1">
         <p class="">
-          🌡️: <span class="font-bold">{{ data.temperature }}</span
+          🌡️: <span class="font-bold">{{ display.temperature }}</span
           >&#8451;
         </p>
       </div>
       <div class="row-span-1 col-span-1">
         <p class="">
-          💧: <span class="font-bold">{{ data.humidity }}</span
+          💧: <span class="font-bold">{{ display.humidity }}</span
           >&#37;
         </p>
       </div>
     </div>
 
     <div class="px-4 my-1 text-sm text-gray-500">
-      <p>{{ data.note }} ({{ data.dvid }})</p>
+      <p>{{ display.note }} ({{ display.dvid }})</p>
     </div>
   </div>
 </template>
 
+
 <script>
-
-
 export default {
-  name: "FullWidgetUSAQI",
+  name: "FullWidgetTH",
   props: {
-    stationid: String,
-    datasrc:{}
+    stationid: { type: String, default: "014" },
   },
-  data() {
-    return {  data: {} };
+
+  computed: {
+    display() {
+      return this.$store.getters.getDataById(this.stationid);
+    },
   },
+
   filters: {
     trendIndicator: (value) => {
       if (value === "u") {
@@ -110,7 +166,7 @@ export default {
       } else return "?";
     },
     overrangeUSAQIIndicator: (value) => {
-      if (value > 500) {
+      if (value > 300) {
         return "⚠️";
       } else return value;
     },
@@ -290,28 +346,25 @@ export default {
 
     getUSAQIColorCode: function (value) {
       if (value > 0 && value <= 50) {
-        return "green-500";
+        return "green";
       } else if (value >= 51 && value <= 100) {
-        return "yellow-400";
+        return "yellow";
       } else if (value >= 101 && value <= 150) {
-        return "orange-500";
+        return "orange";
       } else if (value >= 151 && value <= 200) {
-        return "red-600";
+        return "red";
       } else if (value >= 201 && value <= 300) {
-        return "purple-600";
+        return "purple";
       } else if (value > 301) {
-        return "red-800";
-      } else return "gray-300";
+        return "brown";
+      } else return "gray";
     },
 
     
   },
 
-  created() {
-    this.data = this.datasrc.response.filter(
-      (station) => station.dvid == this.stationid
-    )[0];
-  },
+
+  
 };
 </script>
 

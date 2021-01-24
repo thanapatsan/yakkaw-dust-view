@@ -1,89 +1,94 @@
 <template>
-  <div class="flex flex-col max-w-full border-2 border-gray-500 rounded-md">
-      {{datasrc}}
-    <div class="px-4">
-      <div class="my-4">
-        <h1 class="text-3xl mb-1">
-          {{ data.place }}
+  <div class="flex flex-row max-w-full border border-gray-400 rounded-md" >
+    <div class="flex-1">
+      <div class="m-2">
+        <h1 class="text-xl font-medium my-1">
+          {{ display.place }}
         </h1>
-        <h2 class="text-xl my-1">
-          {{ data.address }}
+        <h2 class="text-base my-1">
+          {{ display.address }}
         </h2>
-        <h3>
-          📅 {{ data.ddate }} {{ data.dtime | clockEmoji }} {{ data.dtime }}
+        <h3 class="text-sm my-1">
+          📅 {{ display.ddate }} {{ display.dtime | clockEmoji }}
+          {{ display.dtime }}
         </h3>
-      </div>
-    </div>
-
-    <div
-      class="grid grid-rows-2 grid-cols-2 grid-flow-col items-center"
-      :class="[`bg-${getTHAQIColorCode(calculateTHAQI_pm25(data.pm25))}`]"
-    >
-      <div class="row-span-2 col-span-1 text-center">
-        <p class="text-6xl font-bold">
-          {{ calculateTHAQI_pm25(data.pm25) }}
-        </p>
-        <p>TH AQI</p>
-      </div>
-
-      <div class="row-span-1 col-span-1">
-        <p>
-          PM<sub>2.5</sub>:
-          <span class="font-bold">{{ data.pm25 }}</span> μg/m<sup>3</sup>
-        </p>
-      </div>
-      <div class="row-span-1 col-span-1">
-        <p>
-          PM<sub>10</sub>:
-          <span class="font-bold">{{ data.pm100 }}</span> μg/m<sup>3</sup>
-        </p>
-      </div>
-    </div>
-
-    <div
-      class="grid grid-rows-4 grid-cols-6 grid-flow-col justify-items-center"
-    >
-      <div class="row-span-1 col-span-6 text-lg">
-        <p>PM<sub>2.5</sub> Trend: {{ data.trend | trendIndicator }}</p>
-      </div>
-
-      <p>24h</p>
-      <p>{{ data.av24h }}</p>
-      <p>{{ data.av24h | THAQIEmoji }}</p>
-      <p>12h</p>
-      <p>{{ data.av12h }}</p>
-      <p>{{ data.av12h | THAQIEmoji }}</p>
-      <p>6h</p>
-      <p class="font-bold">{{ data.av6h }}</p>
-      <p>{{ data.av6h | THAQIEmoji }}</p>
-      <p>3h</p>
-      <p>{{ data.av3h }}</p>
-      <p>{{ data.av3h | THAQIEmoji }}</p>
-      <p>1h</p>
-      <p>{{ data.av1h }}</p>
-      <p>{{ data.av1h | THAQIEmoji }}</p>
-      <p>5m</p>
-      <p class="font-bold">{{ data.pm25 }}</p>
-      <p>{{ data.pm25 | THAQIEmoji }}</p>
-    </div>
-
-    <div class="grid grid-cols-2 justify-items-center">
-      <div class="row-span-1 col-span-1">
-        <p class="">
-          🌡️: <span class="font-bold">{{ data.temperature }}</span
-          >&#8451;
-        </p>
-      </div>
-      <div class="row-span-1 col-span-1">
-        <p class="">
-          💧: <span class="font-bold">{{ data.humidity }}</span
+        <h4 class="text-sm my-1">
+          🌡️: <span>{{ display.temperature }}</span
+          >&#8451; 💧: <span>{{ display.humidity }}</span
           >&#37;
+        </h4>
+      </div>
+
+      <div
+        class="grid grid-rows-1 grid-cols-5 grid-flow-col justify-items-center text-center h-1 mb-1 px-1"
+      >
+        <p
+          class="w-11/12 rounded-md"
+          :class="[
+            `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.av24h))}`,
+          ]"
+        ></p>
+
+        <p
+          class="w-11/12 rounded-md"
+          :class="[
+            `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.av12h))}`,
+          ]"
+        ></p>
+
+        <p
+          class="w-11/12 rounded-md"
+          :class="[
+            `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.av6h))}`,
+          ]"
+        ></p>
+
+        <p
+          class="w-11/12 rounded-md"
+          :class="[
+            `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.av3h))}`,
+          ]"
+        ></p>
+
+        <p
+          class="w-11/12 rounded-md"
+          :class="[
+            `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.av1h))}`,
+          ]"
+        ></p>
+      </div>
+
+      <div class="mx-2 mb-1">
+        <p class="text-xs text-gray-500">
+          {{ display.note }} ({{ display.dvid }})
         </p>
       </div>
     </div>
 
-    <div class="px-4 my-1 text-sm text-gray-500">
-      <p>{{ data.note }} ({{ data.dvid }})</p>
+    <div
+      class="flex flex-col justify-center text-center w-1/3"
+      :class="[
+        `aqi-bg-${getTHAQIColorCode(calculateTHAQI_pm25(display.pm25))}`,
+      ]"
+    >
+      <p class="text-4xl font-bold">
+        {{ calculateTHAQI_pm25(display.pm25) }}
+      </p>
+      <p>TH AQI</p>
+
+      <p class="text-sm mt-1">
+        PM<sub>2.5</sub>:
+        <span class="font-bold">{{ display.pm25 }}</span> μg/m<sup>3</sup>
+      </p>
+      <p class="text-sm mb-1">
+        PM<sub>10</sub>:
+        <span class="font-bold">{{ display.pm100 }}</span> μg/m<sup>3</sup>
+      </p>
+
+      <p class="text-sm">
+        Trend: {{ display.trend | trendIndicator }}
+      </p>
+
     </div>
   </div>
 </template>
@@ -92,25 +97,30 @@
 export default {
   name: "FullWidgetTHAQI",
   props: {
-    stationid: String,
-    datasrc: Object,
+    stationid: { type: String, default: "014" },
   },
-  data() {
-    return { rawdata: {}, data: {} };
+
+  computed: {
+    display() {
+      return this.$store.getters.getDataById(this.stationid);
+    },
   },
+
   filters: {
     trendIndicator: (value) => {
       if (value === "u") {
         return "📈";
       } else if (value === "d") {
         return "📉";
+      } else if (value === "e") {
+        return "➡️";
       } else return "?";
     },
 
     overrangeTHAQIIndicator: (value) => {
-      if (value > 200) {
+      if (value > 150) {
         return "⚠️";
-      } else return value;
+      }
     },
 
     THAQIEmoji: (value) => {
@@ -131,7 +141,8 @@ export default {
 
       let hours = timestring.substring(0, 2);
       let minutes = timestring.substring(timestring.length, 3);
-      let halfhour = minutes >= 16 && minutes <= 45;
+
+      let halfhour = minutes >= 20 && minutes <= 39;
 
       if (hours % 12 == 0) {
         if (halfhour) {
@@ -257,21 +268,17 @@ export default {
 
     getTHAQIColorCode: function (value) {
       if (value > 0 && value <= 25) {
-        return "blue-400";
+        return "blue";
       } else if (value >= 26 && value <= 50) {
-        return "green-500";
+        return "green";
       } else if (value >= 51 && value <= 100) {
-        return "yellow-300";
+        return "yellow";
       } else if (value >= 101 && value <= 200) {
-        return "orange-500";
+        return "orange";
       } else if (value >= 201) {
-        return "red-600";
-      } else return "gray-300";
+        return "red";
+      } else return "gray";
     },
-  },
-
-  mounted() {
-    
   },
 };
 </script>

@@ -1,40 +1,44 @@
 <template>
   <div id="app" class="container">
-    <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <!-- <PassData stationid="014" :datasrc="rawdata" /> -->
-      <!-- <FullWidgetTHAQI stationid="014" /> -->
-      <HelloWorld stationid="014" />
+
+    <div class="mt-2 grid gap-1 lg:gap-2 grid-flow-row grid-cols-1 lg:grid-cols-3">
+      <SmallWidgetTH stationid="014" />
+      <SmallWidgetTH stationid="3018" />
+      <SmallWidgetTH stationid="006" />
+
+      <!-- <FullWidgetTH stationid="014" />
+      <FullWidgetTH stationid="3018" />
+      <FullWidgetTH stationid="006" /> -->
     </div>
+
+    <!-- <StoreData /> -->
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import { store } from "./store/store";
 
-// import PassData from "./components/passdata.vue";
-// import FullWidgetTHAQI from "./components/FullWidgetTHAQI";
-import HelloWorld from "./components/HelloWorld";
+// import FullWidgetTH from "./components/FullWidgetTH";
+import SmallWidgetTH from "./components/SmallWidgetTH";
+
+// import StoreData from "./components/StoreData"
 
 export default {
   name: "App",
+  store,
   components: {
-    // PassData,
-    // FullWidgetTHAQI,
-    HelloWorld,
+    // FullWidgetTH,
+    SmallWidgetTH,
+    // StoreData
   },
-  data() {
-    return { rawdata: {} };
+
+  methods: {
+    fetchData() {
+      this.$store.dispatch("fetchData");
+    },
   },
   created() {
-    //* actual API point
-    // axios
-    //   .get(`https://yakkaw.mfu.ac.th/api/yakkaw/devices`)
-    //   .then((response) => {
-    //     this.rawdata = response.data;
-    //   })
-    //   .catch((e) => {
-    //     this.errors.push(e);
-    //   });
+    this.fetchData();
   },
 };
 </script>
